@@ -24,6 +24,13 @@ const char* password = "0506248863";
 // create a wifi server object on port 80
 WiFiServer server(80);
 
+// Define a struct to hold temperature and humidity values
+struct dhtVals
+{
+  float temperature;
+  float humidity;
+};
+
 void setup() {
   Serial.begin(115200);
   //Start the temperature sensor
@@ -51,10 +58,41 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+    Serial.println("New client connected"); //Print message when a new client connects
+
+    String request = ""; // Variable to store the HTTP request from the client
 }
 
 // put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+dhtVals readTempHumidity() {
+  dhtVals values; // Create a new dhtVals struct to hold the temperature and humidity values
+  delay(100);
+  float t = dht.readTemperature();
+  float h = dht.readHumidity();
+
+  display.clearDisplay();             //Clear the display
+  display.setTextColor(WHITE);        //Set the color
+  display.setTextSize(1);             //Set the text size
+  display.setCursor(8, 20);          //Set the cursor position
+  display.print("Humidity:");      //Send text to the cursor position
+  display.setTextSize(2);             //Set the text size
+  display.setCursor(16, 35);          //Set the cursor position
+  display.print(h);                   //Print the temperature
+  display.setTextSize(1);             //Set the text size
+  display.print(h);      //Send text to the cursor position
+  display.setTextSize(1);             //Set the text size
+  display.setCursor(26, 20);          //Set the cursor position
+  display.print("Temperature:");      //Send text to the cursor position
+  display.setTextSize(2);             //Change text size
+  display.setCursor(34, 35);          //Set the cursor position
+  display.print(t);                   //Print the temperature
+  display.display();                  //Send all the commands to the dislplay
+  Serial.print("Humidity = ");
+  Serial.println(h);
+  Serial.print("Temperature = ");
+  Serial.println(t);
+  delay(100);
+  values.humidity = h; // Create a new dhtVals struct to hold the temperature and humidity values
+  values.temperature = t; // Assign the temperature value to the struct
+  return values; // Return the struct containing the temperature and humidity values
 }
